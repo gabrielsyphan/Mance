@@ -1,0 +1,41 @@
+<aside  th:fragment="sidebar" class="fixed top-0 left-0 w-64 h-screen z-50 bg-white shadow-md flex flex-col justify-between">
+    <div>
+        <div class="flex items-center justify-center gap-2 py-5 border-b">
+            <img src="/dist/img/logo-wbg.png" alt="Logo" class="h-20 cursor-pointer hover:opacity-80 transition" onclick="window.location.href='/products'">
+        </div>
+
+        <nav class="px-4 py-6 space-y-2">
+            <a th:href="@{/store/{slug}(slug=${store.slug})}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-pink-50 text-gray-700"
+               th:classappend="${currentUri == 'store'} ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white'">
+                <i data-lucide="home" class="w-5 h-5"
+                   th:classappend="${currentUri == 'store'} ? 'text-white'"></i>
+                Loja
+            </a>
+
+            <a th:href="@{/store/{slug}/products(slug=${store.slug})}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-pink-50 text-gray-700"
+               th:classappend="${currentUri == 'products'} ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white'">
+                <i data-lucide="home" class="w-5 h-5"
+                   th:classappend="${currentUri == 'products'} ? 'text-white'"></i>
+                Produtos
+            </a>
+
+            <a target="_blank" th:href="@{/showcase/store/{slug}(slug=${store.slug})}"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg hover:pink text-gray-700">
+                <i data-lucide="eye" class="w-5 h-5"></i>
+                Ver Loja
+            </a>
+        </nav>
+    </div>
+
+    <div class="flex items-center gap-3 px-6 py-4 border-t">
+        <img src="https://api.dicebear.com/8.x/thumbs/svg?seed=loja"
+             alt="User"
+             class="w-10 h-10 rounded-full border border-gray-300"/>
+        <div>
+            <p th:text="${store.name}" class="text-sm font-medium text-gray-800">Minha Loja</p>
+            <a href="/logout" class="text-xs text-pink-600 hover:underline">Sair</a>
+        </div>
+    </div>
+</aside>

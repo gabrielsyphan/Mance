@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${product.name}">Detalhes do Produto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert/dist/sweetalert.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-tr from-pink-50 via-white to-purple-50 min-h-screen flex">
+
+<!-- Sidebar -->
+<div th:replace="~{fragments/sidebar :: sidebar(currentUri=${currentUri})}"></div>
+
+<!-- Conteúdo principal -->
+<!-- Ajuste no main: padding mais consistente -->
+<main class="flex-1 ml-64 px-6 md:px-10 py-10">
+
+    <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-3xl overflow-hidden border border-pink-100">
+
+        <!-- Breadcrumb alinhado sem margem lateral -->
+        <nav class="text-sm text-gray-500 mt-8 px-6 md:px-10" aria-label="Breadcrumb">
+            <ol class="inline-flex space-x-2">
+                <li class="flex items-center">
+                    <a href="/products" class="hover:text-pink-600">Produtos</a>
+                    <svg class="w-3 h-3 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                </li>
+                <li class="flex items-center">
+                    <a href="/products" class="hover:text-pink-600">Todos</a>
+                </li>
+                <li class="flex items-center">
+                    <svg class="w-3 h-3 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-600 font-semibold" th:text="${product.name}">Nome do Produto</span>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Layout principal: padding alinhado com breadcrumb -->
+        <div class="grid md:grid-cols-2 gap-6 px-6 md:px-10 py-8">
+
+            <!-- Imagem -->
+            <div class="bg-gradient-to-br from-pink-100 rounded-xl p-6 flex items-center justify-center shadow-inner">
+                <img th:src="@{${product.imageUrl}}" alt="Imagem do Produto"
+                     class="max-h-[400px] object-contain rounded-lg shadow-lg hover:scale-105 transition duration-300" />
+            </div>
+
+            <!-- Informações -->
+            <div class="flex flex-col justify-between space-y-6">
+
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-3 tracking-tight" th:text="${product.name}">Nome do Produto</h1>
+                    <p class="text-gray-600 text-base mb-5 leading-relaxed" th:text="${product.description}">Descrição completa do produto.</p>
+
+                    <div class="inline-block bg-pink-500 text-white px-5 py-2 rounded-full text-lg font-semibold shadow-md hover:bg-pink-600 transition mb-6"
+                         th:text="'R$ ' + ${product.price}">R$ 99,99</div>
+
+                    <div class="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                        <div class="bg-gray-50 p-3 rounded-lg border hover:shadow-md transition">
+                            <span class="font-medium">Tamanho:</span>
+                            <span class="block text-pink-600 font-semibold mt-1" th:text="${product.size}">M</span>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg border hover:shadow-md transition">
+                            <span class="font-medium">Cor:</span>
+                            <span class="block text-pink-600 font-semibold mt-1" th:text="${product.color}">Preto</span>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg border hover:shadow-md transition">
+                            <span class="font-medium">Gênero:</span>
+                            <span class="block text-pink-600 font-semibold mt-1" th:text="${product.gender}">Unissex</span>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg border hover:shadow-md transition">
+                            <span class="font-medium">Categoria:</span>
+                            <span class="block text-pink-600 font-semibold mt-1" th:text="${product.category}">Camisetas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações alinhadas ao início -->
+                <div class="flex gap-4 mt-6 self-start">
+                    <a href="/products"
+                       class="text-sm px-4 py-2 border border-pink-500 text-pink-600 rounded-lg hover:bg-pink-50 transition">
+                        Voltar
+                    </a>
+                    <button class="edit-button text-sm px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg shadow-md hover:opacity-90 transition"
+                            th:data-id="${product.id}"
+                            th:data-name="${product.name}"
+                            th:data-description="${product.description}"
+                            th:data-price="${product.price}"
+                            th:data-image-url="${product.imageUrl}"
+                            th:data-available="${product.available}"
+                            th:data-category="${product.category}"
+                            th:data-color="${product.color}"
+                            th:data-size="${product.size}"
+                            th:data-gender="${product.gender}">
+                        Editar Produto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto md:overflow-hidden p-6 md:p-10 relative">
+            <!-- Botão fechar -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Título -->
+            <h2 id="modalTitle" class="text-2xl font-bold text-gray-800 mb-8">Novo Produto</h2>
+
+            <form id="productForm" enctype="multipart/form-data" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="hidden" name="productId" id="productId">
+                <!-- Coluna esquerda -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+                        <input type="text" name="name" id="name" required
+                               class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-pink-500 focus:outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                        <input type="text" name="description" id="description" required
+                               class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-pink-500 focus:outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Preço</label>
+                        <input type="number" name="price" id="price" step="0.01" required
+                               class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-pink-500 focus:outline-none" />
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="available" id="available"
+                               class="w-5 h-5 text-pink-600 border-gray-300 rounded focus:ring-pink-500" />
+                        <label for="available" class="text-sm text-gray-700 font-medium">Disponível</label>
+                    </div>
+                </div>
+
+                <!-- Coluna direita -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+                        <select name="category" id="category"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="">Selecione</option>
+                            <option value="Camisetas">Camisetas</option>
+                            <option value="Calças">Calças</option>
+                            <option value="Vestidos">Vestidos</option>
+                            <option value="Saias">Saias</option>
+                            <option value="Bermudas">Bermudas</option>
+                            <option value="Blusas">Blusas</option>
+                            <option value="Casacos">Casacos</option>
+                            <option value="Conjuntos">Conjuntos</option>
+                            <option value="Acessórios">Acessórios</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cor</label>
+                        <input type="text" name="color" id="color"
+                               class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-pink-500 focus:outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tamanho</label>
+                        <select name="size" id="size"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-pink-500 focus:outline-none">
+                            <option value="">Selecione</option>
+                            <option value="P">P</option>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                            <option value="GG">GG</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gênero</label>
+                        <select name="gender" id="gender" required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-pink-500 focus:outline-none">
+                            <option value="">Selecione</option>
+                            <option value="Feminino">Feminino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Unissex">Unissex</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Linha inteira para imagem -->
+                <div class="md:col-span-2 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">URL da Imagem (opcional)</label>
+                        <input type="text" name="imageUrl" id="imageUrl"
+                               class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-pink-500 focus:outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ou envie uma imagem</label>
+                        <input type="file" name="imageFile" id="imageFile"
+                               class="w-full rounded-xl border border-gray-300 px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-600 file:text-white hover:file:bg-pink-700 transition" />
+                    </div>
+                </div>
+
+                <!-- Ações -->
+                <div class="md:col-span-2 flex justify-end gap-4 pt-2">
+                    <button type="button" onclick="closeModal()"
+                            class="px-5 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="px-6 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 transition text-white font-semibold">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<!-- Lucide icons -->
+<script th:inline="javascript">
+    const storeSlug = /*[[${store.slug}]]*/ 'store';
+
+    function closeModal() {
+        document.getElementById('productModal').classList.add('hidden');
+    }
+
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', () => {
+            document.getElementById('modalTitle').innerText = 'Editar Produto';
+
+            document.getElementById('productId').value = button.dataset.id;
+            document.getElementById('name').value = button.dataset.name;
+            document.getElementById('description').value = button.dataset.description;
+            document.getElementById('price').value = button.dataset.price;
+            document.getElementById('imageUrl').value = button.dataset.imageUrl || '';
+            document.getElementById('imageFile').value = ''; // Limpa o campo file
+            document.getElementById('available').checked = (button.dataset.available === 'true');
+
+            // Novos campos
+            document.getElementById('category').value = button.dataset.category || '';
+            document.getElementById('color').value = button.dataset.color || '';
+            document.getElementById('size').value = button.dataset.size || '';
+            document.getElementById('gender').value = button.dataset.gender || '';
+
+            document.getElementById('productModal').classList.remove('hidden');
+        });
+    });
+
+    const form = document.getElementById('productForm');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        const id = form.productId.value;
+        const method = id ? 'PUT' : 'POST';
+        const url = `/api/v1/store/${storeSlug}/products/${id}/update`;
+
+        try {
+            const response = await fetch(url, {
+                method,
+                body: formData
+            });
+
+            if (response.ok) {
+                swal({
+                    icon: 'success',
+                    title: 'Produto salvo!',
+                    text: 'O produto foi salvo com sucesso.',
+                }).then(() => location.reload());
+            } else {
+                const error = await response.text();
+                swal('Erro', error, 'error');
+            }
+        } catch (err) {
+            swal('Erro', 'Algo deu errado.', 'error');
+        }
+    });
+
+    lucide.createIcons();
+</script>
+</body>
+</html>

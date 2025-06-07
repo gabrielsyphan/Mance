@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .navbar {
+            transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+            background-color: transparent !important;
+        }
+        .navbar a {
+            color: white;
+        }
+        .navbar .logo {
+            color: white;
+        }
+        .scrolled {
+            background-color: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .scrolled a {
+            color: #1f2937; /* gray-800 */
+        }
+        .scrolled a:hover {
+            color: #db2777; /* pink-600 */
+        }
+        .scrolled .logo {
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+<!-- Navbar -->
+<nav id="navbar" class="navbar fixed w-full top-0 left-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <a href="/" class="logo text-2xl font-semibold">Mance</a>
+        <div class="space-x-4">
+            <a href="/signin" id="login-nav-btn" class="font-medium hover:text-pink-600 transition hover:scale-105"
+               th:styleappend="${isAuthenticated} ? 'display: none;'  :  ''">Acessar</a>
+            <span class="mx-2 text-gray-300">|</span>
+            <a href="/signup" id="register-nav-btn" class="font-medium hover:text-pink-600 transition hover:scale-105"
+               th:styleappend="${isAuthenticated} ? 'display: none;'  :  ''">Cadastre-se</a>
+            <a href="/products" id="home-nav-btn" class="font-medium hover:text-pink-600 transition hover:scale-105"
+               th:styleappend="${isAuthenticated} ? '' : 'display: none;'">
+                Minha loja
+            </a>
+            <a href="javascript:void(0);" onclick="logout()" id="logout-nav-btn"
+               class="font-medium hover:text-pink-600 transition" style="display: none;">
+                Sair
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="relative flex-grow flex items-center justify-center text-center px-4 pt-48 pb-40 overflow-hidden bg-gradient-to-r from-pink-500 to-purple-600">
+    <div class="max-w-6xl">
+        <h1 class="text-5xl font-bold text-white mb-4">
+            Crie sua vitrine online em minutos
+        </h1>
+        <p class="text-white text-xl mb-8">
+            Uma vitrine profissional para seus produtos. Muito além do Instagram, sem taxas e sem complicações.
+        </p>
+        <div class="flex justify-center gap-4 flex-wrap">
+            <a href="/signup" id="register-btn" class="bg-white text-pink-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 hover:scale-105 transition">
+                Criar minha loja
+            </a>
+            <a href="/signin" id="login-btn" class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-pink-600 hover:scale-105 transition">
+                Já tenho loja
+            </a>
+            <a href="/products" id="home-btn" class="bg-white text-pink-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition" style="display: none;">
+                Minha loja
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Benefícios -->
+<section id="beneficios" class="max-w-6xl mx-auto px-6 py-20">
+    <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">
+        Por que ter sua própria vitrine?
+    </h2>
+    <div class="grid md:grid-cols-2 gap-14">
+        <!-- Item -->
+        <div class="flex gap-4">
+            <i data-lucide="rocket" class="w-10 h-10 text-pink-600 shrink-0"></i>
+            <div>
+                <h3 class="text-xl font-semibold mb-2">Fácil e Rápido</h3>
+                <p class="text-gray-600">Cadastre sua loja em minutos, sem burocracia e sem complicação.</p>
+            </div>
+        </div>
+        <!-- Item -->
+        <div class="flex gap-4">
+            <i data-lucide="badge-check" class="w-10 h-10 text-pink-600 shrink-0"></i>
+            <div>
+                <h3 class="text-xl font-semibold mb-2">Mais Credibilidade</h3>
+                <p class="text-gray-600">Página bonita e profissional que transmite confiança, além de não depender só do Instagram.</p>
+            </div>
+        </div>
+        <!-- Item -->
+        <div class="flex gap-4">
+            <i data-lucide="wallet" class="w-10 h-10 text-pink-600 shrink-0"></i>
+            <div>
+                <h3 class="text-xl font-semibold mb-2">Custo Acessível</h3>
+                <p class="text-gray-600">Planos a partir de R$ 12/mês. Sem taxas, sem comissões e sem intermediações.</p>
+            </div>
+        </div>
+        <!-- Item -->
+        <div class="flex gap-4">
+            <i data-lucide="shopping-bag" class="w-10 h-10 text-pink-600 shrink-0"></i>
+            <div>
+                <h3 class="text-xl font-semibold mb-2">Divulgue Produtos com Facilidade</h3>
+                <p class="text-gray-600">Cada produto com foto, preço, descrição e botão direto para WhatsApp ou pagamento.</p>
+            </div>
+        </div>
+        <!-- Item -->
+        <div class="flex gap-4">
+            <i data-lucide="globe" class="w-10 h-10 text-pink-600 shrink-0"></i>
+            <div>
+                <h3 class="text-xl font-semibold mb-2">Link Personalizado</h3>
+                <p class="text-gray-600">Endereço fácil de lembrar como <strong>sualoja.com.br</strong> ou <strong>nome.suavitrine.com</strong>.</p>
+            </div>
+        </div>
+        <!-- Item -->
+        <div class="flex gap-4">
+            <i data-lucide="settings" class="w-10 h-10 text-pink-600 shrink-0"></i>
+            <div>
+                <h3 class="text-xl font-semibold mb-2">Gerencie sua loja com liberdade</h3>
+                <p class="text-gray-600">Ative, pause ou edite seus produtos a qualquer momento. Controle sua vitrine de forma simples, direto do celular ou computador.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="bg-gray-50 py-20">
+    <div class="max-w-4xl mx-auto px-6">
+        <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Como funciona?</h2>
+        <div class="space-y-6">
+            <!-- Passo 1 -->
+            <div class="bg-white border-l-4 border-pink-600 p-6 rounded-lg shadow-sm hover:shadow-md hover:bg-pink-50 transition">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-2">1. Crie sua loja</h3>
+                <p class="text-gray-600">
+                    Cadastre-se, escolha o nome da sua loja e tenha um link personalizado para divulgar seus produtos.
+                </p>
+            </div>
+
+            <!-- Passo 2 -->
+            <div class="bg-white border-l-4 border-pink-600 p-6 rounded-lg shadow-sm hover:shadow-md hover:bg-pink-50 transition">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-2">2. Adicione seus produtos</h3>
+                <p class="text-gray-600">
+                    Cadastre fotos, preços e descrições dos seus produtos de forma rápida e fácil.
+                </p>
+            </div>
+
+            <!-- Passo 3 -->
+            <div class="bg-white border-l-4 border-pink-600 p-6 rounded-lg shadow-sm hover:shadow-md hover:bg-pink-50 transition">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-2">3. Compartilhe sua vitrine</h3>
+                <p class="text-gray-600">
+                    Divulgue o link da sua loja nas redes sociais, WhatsApp e onde mais desejar.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Planos -->
+<section class="py-20">
+    <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-4xl font-bold text-center mb-12">Planos Simples e Acessíveis</h2>
+        <div class="grid md:grid-cols-4 gap-8">
+            <!-- Plano Gratuito -->
+            <div class="border-2 border-pink-600 rounded-lg p-8 bg-pink-50 shadow-lg hover:shadow-2xl transition">
+                <h3 class="text-2xl font-bold mb-4 text-pink-700">Primeiro Mês Grátis</h3>
+                <p class="text-4xl font-bold mb-4 text-pink-700">R$ 0</p>
+                <p class="mb-6 text-gray-700">Ative sua loja e experimente sem pagar nada. Explore todas as funcionalidades, publique seus produtos e veja como sua vitrine funciona na prática.</p>
+                <p class="mb-6 text-sm text-gray-600">Sem necessidade de cartão de crédito. Ao final do período você escolhe se quer continuar com um dos nossos planos.</p>
+                <a href="/signup" class="bg-pink-600 text-white px-6 py-3 rounded-full block text-center hover:bg-pink-700 transition hover:scale-105">
+                    Criar Minha Loja
+                </a>
+            </div>
+
+            <!-- Plano Mensal -->
+            <div class="border rounded-lg p-8 shadow hover:shadow-xl transition flex flex-col">
+                <h3 class="text-2xl font-bold mb-4">Mensal</h3>
+                <p class="text-4xl font-bold mb-4">R$ 20</p>
+                <p class="mb-6 flex-grow">Ideal para quem quer começar sem compromisso e pagar mensalmente pela sua vitrine online.</p>
+                <p class="mb-6 text-sm text-gray-600">Renovação automática. Cancele quando quiser.</p>
+                <a href="/signup" class="bg-pink-600 text-white px-6 py-3 rounded-full block text-center hover:bg-pink-700 transition hover:scale-105">
+                    Começar
+                </a>
+            </div>
+
+            <!-- Plano Trimestral -->
+            <div class="border-2 border-pink-600 rounded-lg p-8 shadow-lg hover:shadow-2xl transition flex flex-col">
+                <h3 class="text-2xl font-bold mb-4">Trimestral</h3>
+                <p class="text-4xl font-bold mb-4">R$ 45</p>
+                <p class="mb-6 flex-grow">Economize 25% com o plano trimestral. Perfeito para quem quer se estabelecer e divulgar seu catálogo com estabilidade.</p>
+                <p class="mb-6 text-sm text-gray-600">R$ 15/mês — Cobrança a cada 3 meses.</p>
+                <a href="/signup" class="bg-pink-600 text-white px-6 py-3 rounded-full block text-center hover:bg-pink-700 transition hover:scale-105">
+                    Começar
+                </a>
+            </div>
+
+            <!-- Plano Anual -->
+            <div class="border rounded-lg p-8 shadow hover:shadow-xl transition flex flex-col">
+                <h3 class="text-2xl font-bold mb-4">Anual</h3>
+                <p class="text-4xl font-bold mb-4">R$ 144</p>
+                <p class="mb-6 flex-grow">A escolha mais econômica! Economize 40% e tenha sua vitrine ativa o ano inteiro para seus clientes.</p>
+                <p class="mb-6 text-sm text-gray-600">R$ 12/mês — Cobrança anual.</p>
+                <a href="/signup" class="bg-pink-600 text-white px-6 py-3 rounded-full block text-center hover:bg-pink-700 transition hover:scale-105">
+                    Começar
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Provas Sociais -->
+<section class="py-20 bg-gray-100">
+    <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-12">Quem usa, recomenda</h2>
+        <div class="grid md:grid-cols-3 gap-10">
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <p class="mb-4">“Consegui organizar meus produtos e passei uma imagem muito mais profissional para meus clientes. Recomendo demais!”</p>
+                <div class="font-semibold text-pink-600">Amanda Souza</div>
+                <div class="text-sm text-gray-500">Moda praia</div>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <p class="mb-4">“Simples, rápido e intuitivo. Meus clientes adoraram minha vitrine nova. As vendas aumentaram bastante.”</p>
+                <div class="font-semibold text-pink-600">Bruno Almeida</div>
+                <div class="text-sm text-gray-500">Moda Masculina</div>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <p class="mb-4">“Perfeito para quem vende no Instagram e WhatsApp. Agora meus produtos estão organizados em um só lugar.”</p>
+                <div class="font-semibold text-pink-600">Carla Mendes</div>
+                <div class="text-sm text-gray-500">Moda fitness</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-20">
+    <div class="max-w-3xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Perguntas Frequentes</h2>
+        <div class="space-y-6">
+            <div>
+                <h3 class="font-semibold text-pink-600">Preciso pagar para usar?</h3>
+                <p class="text-gray-700">Não! Você pode criar sua loja gratuitamente e começar a divulgar seus produtos sem custos.</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-pink-600">Posso vender diretamente pela plataforma?</h3>
+                <p class="text-gray-700">Por enquanto, nossa plataforma funciona como uma vitrine. As vendas são combinadas diretamente entre você e seus clientes.</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-pink-600">Preciso ter CNPJ para criar minha loja?</h3>
+                <p class="text-gray-700">Não! Qualquer pessoa pode criar uma loja, seja autônomo, informal ou empresa.</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-pink-600">Quantos produtos posso cadastrar?</h3>
+                <p class="text-gray-700">Você pode cadastrar quantos produtos quiser. Sem limites!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-center transition-transform transform">
+    <div class="max-w-2xl mx-auto px-4">
+        <h2 class="text-3xl font-extrabold mb-4">Pronto para acelerar sua jornada?</h2>
+        <p class="mb-8 text-lg max-w-md mx-auto">Crie sua conta gratuitamente e comece hoje mesmo.</p>
+        <a href="/signup" class="inline-block bg-white text-pink-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition hover:scale-105">
+            Começar agora
+        </a>
+    </div>
+</section>
+
+<!-- Rodapé -->
+<footer class="bg-black text-white py-8">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-sm">&copy; 2025 Mance. Todos os direitos reservados.</p>
+        <div class="flex space-x-6 mt-4 md:mt-0">
+            <a href="https://www.linkedin.com/in/gabrielsyphan/" target="_blank" class="hover:text-pink-600">
+                <i data-lucide="linkedin" class="w-5 h-5"></i>
+            </a>
+            <a href="https://github.com/gabrielsyphan" target="_blank" class="hover:text-pink-600">
+                <i data-lucide="github" class="w-5 h-5"></i>
+            </a>
+            <a href="https://instagram.com/gabrielsyphan" target="_blank" class="hover:text-pink-600">
+                <i data-lucide="instagram" class="w-5 h-5"></i>
+            </a>
+            <a href="mailto:lucasgabrielpdoliveira@gmail.com" class="hover:text-pink-600">
+                <i data-lucide="mail" class="w-5 h-5"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('navbar-scrolled');
+        } else {
+            navbar.classList.remove('navbar-scrolled');
+        }
+    });
+
+    window.addEventListener("scroll", () => {
+        const navbar = document.getElementById("navbar");
+        if (window.scrollY > 20) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
+        }
+    });
+</script>
+</body>
+</html>

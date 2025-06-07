@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Mance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert/dist/sweetalert.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white sm:bg-gradient-to-r sm:from-pink-500 sm:to-purple-600 flex items-center justify-center">
+
+<div class="bg-white rounded-3xl shadow-none sm:shadow-xl w-full max-w-md p-10 sm:p-[70px]">
+    <img src="/dist/img/logo-wbg.png" alt="Logo"
+         class="mx-auto mb-4 h-24 sm:h-24 cursor-pointer hover:opacity-80 transition"
+         onclick="window.location.href='/'">
+
+    <form id="loginForm" class="space-y-6">
+        <div>
+            <label for="email" class="block text-sm font-medium mb-1">Email</label>
+            <input id="email" type="email" name="username"
+                   class="w-full px-4 py-3 sm:py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                   placeholder="seu@email.com" required />
+        </div>
+
+        <div>
+            <label for="password" class="block text-sm font-medium mb-1">Senha</label>
+            <input id="password" type="password" name="password"
+                   class="w-full px-4 py-3 sm:py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                   placeholder="********" required />
+        </div>
+
+        <button type="submit"
+                class="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 text-white py-4 sm:py-3 rounded-lg font-medium transition-transform transform hover:scale-105">
+            Entrar
+        </button>
+    </form>
+
+    <p class="text-center text-sm text-gray-600 mt-6">
+        Não tem uma loja?
+        <a href="/signup" class="text-pink-600 font-medium hover:underline">Criar loja</a>
+    </p>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        };
+
+        const response = await fetch('/api/v1/auth/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            window.location.href = '/products';
+        } else {
+            swal('Erro', result.message, 'error');
+        }
+    });
+</script>
+
+</body>
+</html>

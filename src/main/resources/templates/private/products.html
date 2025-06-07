@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos | Mance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body class="bg-gray-100">
+<div th:replace="~{fragments/sidebar :: sidebar(currentUri=${currentUri})}"></div>
+
+<div class="ml-64 p-10 mb-20">
+    <div class="flex justify-between items-center mb-2">
+        <div class="flex flex-col gap-2 mb-6">
+            <nav class="text-sm text-gray-500" aria-label="Breadcrumb">
+                <ol class="inline-flex space-x-2">
+                    <li class="flex items-center">
+                        <a href="/products" class="hover:text-pink-600">Produtos</a>
+                        <svg class="w-3 h-3 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                    </li>
+                    <li class="flex items-center">
+                        <a href="/products" class="hover:text-pink-600">Todos</a>
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="text-3xl font-bold text-gray-800">Meus produtos</h1>
+            <p class="text-sm text-gray-500">Gerencie os produtos da sua loja. Crie, edite e visualize os existentes.</p>
+        </div>
+        <button onclick="openModal()"
+                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg shadow">
+            <i data-lucide="plus" class="w-4 h-4"></i> Novo Produto
+        </button>
+    </div>
+
+    <div class="mb-4">
+        <input type="text" id="searchInput" placeholder="Filtrar produtos..."
+               class="w-full max-w-lg px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:outline-none"
+               onkeyup="filterTable()"/>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-xl shadow-sm">
+            <thead class="bg-gray-100 text-gray-600 text-left text-sm uppercase">
+            <tr>
+                <th class="px-6 py-3">Nome</th>
+                <th class="px-6 py-3">Descrição</th>
+                <th class="px-6 py-3">Preço</th>
+                <th class="px-6 py-3">Categoria</th>
+                <th class="px-6 py-3">Disponível</th>
+                <th class="px-6 py-3 text-center">Ações</th>
+            </tr>
+            </thead>
+            <tbody id="productTableBody" class="text-gray-700 text-sm">
+            <tr th:each="product : ${products}"
+                th:classappend="${!product.available} ? 'opacity-60' : ''"
+                class="hover:bg-gray-50 border-t border-gray-200">
+                <td class="px-6 py-4 font-medium" th:text="${product.name}"></td>
+                <td class="px-6 py-4" th:text="${product.description}"></td>
+                <td class="px-6 py-4" th:text="'R$ ' + ${product.price}"></td>
+                <td class="px-6 py-4" th:text="${product.category}"></td>
+                <td class="px-6 py-4">
+                    <span th:if="${product.available}" class="text-green-600 font-medium">Sim</span>
+                    <span th:unless="${product.available}" class="text-gray-500">Não</span>
+                </td>
+                <td class="px-6 py-4 flex justify-center gap-3">
+                    <a th:href="@{/products/{id}(id=${product.id})}" class="text-gray-600 hover:text-blue-600">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </a>
+                    <button
+                            th:data-id="${product.id}"
+                            th:data-name="${product.name}"
+                            th:data-description="${product.description}"
+                            th:data-price="${product.price}"
+                            th:data-image-url="${product.imageUrl}"
+                            th:data-available="${product.available}"
+                            th:data-category="${product.category}"
+                            th:data-color="${product.color}"
+                            th:data-size="${product.size}"
+                            th:data-gender="${product.gender}"
+                            class="edit-button text-gray-600 hover:text-pink-600">
+                        <i data-lucide="edit" class="w-5 h-5"></i>
+                    </button>
+                    <button
+                            th:data-id="${product.id}"
+                            class="delete-button text-gray-600 hover:text-red-600">
+                        <i data-lucide="trash" class="w-5 h-5"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal e scripts mantidos iguais -->
+<div th:replace="~{fragments/product-modal :: modal}"></div>
+
+<script>
+    const storeSlug = /*[[${store.slug}]]*/ 'store';
+
+    function openModal() {
+        document.getElementById('modalTitle').innerText = 'Novo Produto';
+        document.getElementById('productId').value = '';
+        document.getElementById('name').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('price').value = '';
+        document.getElementById('imageUrl').value = '';
+        document.getElementById('imageFile').value = '';
+        document.getElementById('available').checked = true;
+
+        // Novos campos
+        document.getElementById('category').value = '';
+        document.getElementById('color').value = '';
+        document.getElementById('size').value = 'P';
+        document.getElementById('gender').value = 'Feminino';
+
+        document.getElementById('productModal').classList.remove('hidden');
+    }
+
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', () => {
+            openModalEdit(
+                button.dataset.id,
+                button.dataset.name,
+                button.dataset.description,
+                parseFloat(button.dataset.price),
+                button.dataset.imageUrl,
+                button.dataset.available === 'true',
+                button.dataset.category,
+                button.dataset.color || '',
+                button.dataset.size,
+                button.dataset.gender
+            );
+        });
+    });
+
+    function openModalEdit(id, name, description, price, imageUrl, available, category, color, size, gender) {
+        document.getElementById('modalTitle').innerText = 'Editar Produto';
+        document.getElementById('productId').value = id;
+        document.getElementById('name').value = name;
+        document.getElementById('description').value = description;
+        document.getElementById('price').value = price;
+        document.getElementById('imageUrl').value = imageUrl;
+        document.getElementById('imageFile').value = ''; // limpa para evitar conflitos
+        document.getElementById('available').checked = available;
+
+        document.getElementById('category').value = category;
+        document.getElementById('color').value = color;
+        document.getElementById('size').value = size;
+        document.getElementById('gender').value = gender;
+
+        document.getElementById('productModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('productModal').classList.add('hidden');
+    }
+
+    const form = document.getElementById('productForm');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        const id = form.productId.value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id
+            ? `/api/v1/store/${storeSlug}/products/${id}/update`
+            : `/api/v1/store/${storeSlug}/products/save`;
+
+        try {
+            const response = await fetch(url, {
+                method,
+                body: formData
+            });
+
+            if (response.ok) {
+                swal({
+                    icon: 'success',
+                    title: 'Produto salvo!',
+                    text: 'O produto foi salvo com sucesso.',
+                }).then(() => location.reload());
+            } else {
+                const error = await response.text();
+                swal('Erro', error, 'error');
+            }
+        } catch (err) {
+            swal('Erro', 'Algo deu errado.', 'error');
+        }
+    });
+
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', async () => {
+            const productId = button.getAttribute('data-id');
+            const storeSlug = /*[[${store.slug}]]*/ 'store';
+
+            swal({
+                title: 'Tem certeza?',
+                text: "Você não poderá reverter isso!",
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            }).then(async (confirm) => {
+                if (confirm) {
+                    try {
+                        const response = await fetch(`/api/v1/store/${storeSlug}/products/${productId}/delete`, {
+                            method: 'DELETE'
+                        });
+
+                        if (response.ok) {
+                            swal('Deletado!', 'Produto removido.', 'success').then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            const error = await response.text();
+                            swal('Erro', error, 'error');
+                        }
+                    } catch (error) {
+                        swal('Erro', 'Algo deu errado.', 'error');
+                    }
+                }
+            });
+        });
+    });
+
+    function filterTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const rows = document.querySelectorAll("#productTableBody tr");
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    }
+
+
+    lucide.createIcons();
+</script>
+</body>
+</html>
